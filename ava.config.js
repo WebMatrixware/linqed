@@ -1,3 +1,4 @@
 export default {
-   verbose: true
+  failFast: true,
+  verbose: true
 };

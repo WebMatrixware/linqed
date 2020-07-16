@@ -12,11 +12,11 @@ test.beforeEach((t) => {
     { name: 'Rob', id: 4 }
   ]);
   
-  t.context.outer = [
+  t.context.outer = Linqed([
     { id: 1, department: 'Installation' },
     { id: 3, department: 'Service' },
     { id: 4, department: 'CSR' }
-  ];
+  ]);
 });
 
 test('.join() exists', (t) => {
