@@ -20,6 +20,12 @@ With that in mind please note that some things are left out intentionally becaus
 
 With that being said, I am always happy to be convinced of a new use case or some better way of handling a common problem that can or should be added.
 
+# Installation
+
+```
+npm install -s linqed
+```
+
 # Basic Usage
 
 ```javascript

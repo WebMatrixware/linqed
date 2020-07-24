@@ -2,7 +2,18 @@
   "name": "linqed",
   "version": "1.0.0",
   "description": "Simple javascript LINQ implementation for arrays of objects",
+  "keywords": [
+    "collection",
+    "data",
+    "javascript",
+    "library",
+    "linq"
+  ],
   "main": "./src/index.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/WebMatrixware/linqed"
+  },
   "dependencies": {
     "ava": "^3.10.1",
     "nyc": "^15.1.0"
