@@ -2,7 +2,7 @@
 
 linqed (pronounced linked), is a no frills linq library for Javascript. It boasts the following.
 
-Check out the [API](readme.md) for details on methods and usage.
+Check out the [API](https://github.com/WebMatrixware/linqed/blob/master/api.md) for details on methods and usage.
 
 * No prototype pollution
 * Simple transformation of any array into a linqed collection without impacting the rest of your arrays
