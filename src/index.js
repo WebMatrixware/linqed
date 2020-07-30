@@ -580,18 +580,118 @@ let linqed = function(array) {
     return values;
   }
   
-  // Return a merged array joined on the filter function
-  // provided
+  /**
+   * Returns a merged collection based on matching the specified filter property. Assumes property named id if no filter is specified.
+   * @method join
+   * @memberof linqed#
+   * @param {collection|array} outer Collection to use as the outer member of an standard inner join
+   * @param {string|function} filter Either a property name to match on, or a function that does the matching for us and returns the value of an object to match on.
+   *
+   * @example <caption>.join() with no default id matching</caption>
+   * // With a valid outer collection but no filter .join() assumes
+   * // that the objects of both arrays have an 'id' property
+   * let joined = linqed([
+   *   { name: 'Jeff', id: 1 },
+   *   { name: 'Rick', id: 2 },
+   *   { name: 'John', id: 3 }
+   * ]).join(linqed([
+   *   { city: 'Atlanta', id: 1 },
+   *   { city: 'Salem', id: 2 },
+   *   { city: 'New York', id: 3 }
+   * ]));
+   * console.log(joined);
+   * //[
+   * //  { name: 'Jeff', id: 1, city: 'Atlanta' },
+   * //  { name: 'Rick', id: 2, city: 'Salem' },
+   * //  { name: 'John', id: 3, city: 'New York' }
+   * //]
+   *
+   * @example <caption>.join() with string filter</caption>
+   * // With a valid outer collection and a string filter .join()
+   * // will merge the collections based on matching properties
+   * // with your string filter for a name
+   * let joined = linqed([
+   *   { name: 'Jeff', id: 1 },
+   *   { name: 'Rick', id: 2 },
+   *   { name: 'John', id: 3 }
+   * ]).join(linqed([
+   *   { city: 'Atlanta', id: 1 },
+   *   { city: 'Salem', id: 2 },
+   *   { city: 'New York', id: 3 }
+   * ]), 'id');
+   * console.log(joined);
+   * //[
+   * //  { name: 'Jeff', id: 1, city: 'Atlanta' },
+   * //  { name: 'Rick', id: 2, city: 'Salem' },
+   * //  { name: 'John', id: 3, city: 'New York' }
+   * //]
+   *
+   * @example <caption>.join() with a function filter</caption>
+   * // With a valid outer collection and a function to return the 
+   * // value to match collection objects on
+   * let joined = linqed([
+   *   { name: 'Jeff', id: 1 },
+   *   { name: 'Rick', id: 2 },
+   *   { name: 'John', id: 3 }
+   * ]).join(linqed([
+   *   { city: 'Atlanta', id: 1 },
+   *   { city: 'Salem', id: 2 },
+   *   { city: 'New York', id: 3 }
+   * ]), (item) => {
+   *   return (typeof(item.id) === number) ? item.id : null;
+   * });
+   * console.log(joined);
+   * //[
+   * //  { name: 'Jeff', id: 1, city: 'Atlanta' },
+   * //  { name: 'Rick', id: 2, city: 'Salem' },
+   * //  { name: 'John', id: 3, city: 'New York' }
+   * //]
+   *
+   * @returns {collection} The merged collection that results from joining the inner (base) collection and the provided outer function.
+   */
   let __join = function __join(outer, filter) {
     
     let joinedArray = linqed([]);
     
-    if (!Array.isArray(outer)
-       || typeof(filter) !== 'function') {
-      return this;
-    } else {
-      return this;
+    if (Array.isArray(outer) && typeof(filter) === 'undefined') {
+      
+      this.forEach((item) => {
+        
+        joinedArray.push(Object.assign({}, item, outer.firstOrDefault((oi) => {
+          return (oi['id'] === item['id']) ? true : false;
+        }, {})));
+      });
+      
+      return joinedArray;
     }
+    
+    if (Array.isArray(outer) && typeof(filter) === 'string') {
+      
+      this.forEach((item) => {
+        
+        joinedArray.push(Object.assign({}, item, outer.firstOrDefault((oi) => {
+          return (oi[filter] === item[filter]) ? true : false;
+        }, {})));
+      });
+      
+      return joinedArray;
+    }
+    
+    if (Array.isArray(outer) && typeof(filter) === 'function') {
+      
+      this.forEach((item) => {
+      
+        let res = filter(item);
+        
+        joinedArray.push(Object.assign({}, res, outer.firstOrDefault((oi) => {
+          return (filter(oi) === res) ? true : false;
+        }, {})));
+      });
+      
+      return joinedArray;
+    }
+    
+    return this;
   };
   
   /**

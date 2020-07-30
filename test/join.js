@@ -24,11 +24,32 @@ test('.join() exists', (t) => {
   t.truthy(t.context.inner.hasOwnProperty('join'));
 });
 
-test('.join() returns the array unaltered if there is no outer array or filter provided', (t) => {
+test('.join() is not enumerable', (t) => {
   
-  t.is(t.context.inner.join().length, t.context.inner.length);
-  t.is(t.context.inner.join(t.context.outer).length, t.context.inner.length);
-  t.is(t.context.inner.join(t.context.outer, null).length, t.context.inner.length);
+  t.falsy(t.context.inner.propertyIsEnumerable('join'));
+});
+
+test('.join() returns the collection unaltered if there is no outer array or valid filter provided', (t) => {
   
-  t.is(t.context.inner.join(t.context.outer, () => {}).length, t.context.inner.length);
+  t.is(t.context.inner.join()[0].name, 'Ben');
+  t.falsy(t.context.inner.join()[0].hasOwnProperty('department'));
+  t.falsy(t.context.inner.join(t.context.outer, null)[0].hasOwnProperty('department'));
+  t.falsy(t.context.inner.join(t.context.outer, 1)[0].hasOwnProperty('department'));
+});
+
+test('.join() returns a merged collection if a string filter is passed', (t) => {
+  
+  t.is(t.context.inner.join(t.context.outer, 'id')[0].department, 'Installation');
+});
+
+test('.join() returns a merged collection if no filter is passed, but the objects in both arrays have an id property', (t) => {
+  
+  t.is(t.context.inner.join(t.context.outer)[0].department, 'Installation');
+});
+
+test('.join() returns a merged collection based on a function filter', (t) => {
+  
+  t.is(t.context.inner.join(t.context.outer, (i) => {
+    return (typeof(i.id) !== 'undefined') ? i.id : null;
+  })[0].department, 'Installation');
 });

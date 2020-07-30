@@ -26,6 +26,7 @@ let collection = linqed([]);
     * [.first(filter)](#linqed+first) ⇒ <code>any</code>
     * [.firstOrDefault(filter, default)](#linqed+firstOrDefault) ⇒ <code>any</code>
     * [.intersect(filterCollection)](#linqed+intersect) ⇒ <code>collection</code>
+    * [.join(outer, filter)](#linqed+join) ⇒ <code>collection</code>
     * [.max(filter)](#linqed+max) ⇒ <code>number</code>
     * [.min(filter)](#linqed+min) ⇒ <code>number</code>
     * [.select(filter)](#linqed+select) ⇒ <code>collection</code>
@@ -338,6 +339,82 @@ let collection = linqed([1, 2, 3, 4, 5, 6]).intersect(6); // [6]
 ```js
 // Where no common elements are found an empty collection is returned
 let collection = linqed([1, 2, 3, 4, 5, 6]).intersect(10); // []
+```
+<a name="linqed+join"></a>
+
+### linqed.join(outer, filter) ⇒ <code>collection</code>
+Returns a merged collection based on matching the specified filter property. Assumes property named id if no filter is specified.
+
+**Kind**: instance method of [<code>linqed</code>](#linqed)  
+**Returns**: <code>collection</code> - The merged collection that results from joining the inner (base) collection and the provided outer function.  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| outer | <code>collection</code> \| <code>array</code> | Collection to use as the outer member of an standard inner join |
+| filter | <code>string</code> \| <code>function</code> | Either a property name to match on, or a function that does the matching for us and returns the value of an object to match on. |
+
+**Example** *(.join() with no default id matching)*  
+```js
+// With a valid outer collection but no filter .join() assumes
+// that the objects of both arrays have an 'id' property
+let joined = linqed([
+  { name: 'Jeff', id: 1 },
+  { name: 'Rick', id: 2 },
+  { name: 'John', id: 3 }
+]).join(linqed([
+  { city: 'Atlanta', id: 1 },
+  { city: 'Salem', id: 2 },
+  { city: 'New York', id: 3 }
+]));
+console.log(joined);
+//[
+//  { name: 'Jeff', id: 1, city: 'Atlanta' },
+//  { name: 'Rick', id: 2, city: 'Salem' },
+//  { name: 'John', id: 3, city: 'New York' }
+//]
+```
+**Example** *(.join() with string filter)*  
+```js
+// With a valid outer collection and a string filter .join()
+// will merge the collections based on matching properties
+// with your string filter for a name
+let joined = linqed([
+  { name: 'Jeff', id: 1 },
+  { name: 'Rick', id: 2 },
+  { name: 'John', id: 3 }
+]).join(linqed([
+  { city: 'Atlanta', id: 1 },
+  { city: 'Salem', id: 2 },
+  { city: 'New York', id: 3 }
+]), 'id');
+console.log(joined);
+//[
+//  { name: 'Jeff', id: 1, city: 'Atlanta' },
+//  { name: 'Rick', id: 2, city: 'Salem' },
+//  { name: 'John', id: 3, city: 'New York' }
+//]
+```
+**Example** *(.join() with a function filter)*  
+```js
+// With a valid outer collection and a function to return the 
+// value to match collection objects on
+let joined = linqed([
+  { name: 'Jeff', id: 1 },
+  { name: 'Rick', id: 2 },
+  { name: 'John', id: 3 }
+]).join(linqed([
+  { city: 'Atlanta', id: 1 },
+  { city: 'Salem', id: 2 },
+  { city: 'New York', id: 3 }
+]), (item) => {
+  return (typeof(item.id) === number) ? item.id : null;
+});
+console.log(joined);
+//[
+//  { name: 'Jeff', id: 1, city: 'Atlanta' },
+//  { name: 'Rick', id: 2, city: 'Salem' },
+//  { name: 'John', id: 3, city: 'New York' }
+//]
 ```
 <a name="linqed+max"></a>
 
