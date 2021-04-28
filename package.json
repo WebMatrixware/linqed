@@ -1,6 +1,6 @@
 {
   "name": "linqed",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "Simple javascript LINQ implementation for arrays of objects",
   "keywords": [
     "collection",
@@ -14,12 +14,11 @@
     "type": "git",
     "url": "https://github.com/WebMatrixware/linqed"
   },
-  "dependencies": {
-    "ava": "^3.10.1",
-    "nyc": "^15.1.0"
-  },
+  "dependencies": {},
   "devDependencies": {
-    "jsdoc-to-markdown": "^6.0.1"
+    "ava": "^3.15.0",
+    "jsdoc-to-markdown": "^6.0.1",
+    "nyc": "^15.1.0"
   },
   "scripts": {
     "build": "jsdoc2md -c jsdoc.json src/*.js > api.md",
