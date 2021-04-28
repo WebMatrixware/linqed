@@ -12,7 +12,7 @@ Check out the [API](https://github.com/WebMatrixware/linqed/blob/master/api.md) 
 
 # Philosophy
 
-linqed 's goal is to be lightweight, simple, and easy to use. Rather than provide an entire data layer linqued looks to add basic query and data manipulation functionality to arrays.
+linqed's goal is to be lightweight, simple, and easy to use. Rather than provide an entire data layer linqued looks to add basic query and data manipulation functionality to arrays.
 
 Linqued therefore does not attempt to meet every use case, but instead to focus on those core pieces that will be used regularly by a wide variety of projects.
 
