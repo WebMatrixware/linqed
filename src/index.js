@@ -221,7 +221,7 @@ let linqed = function(array) {
    * // { a: 3, b: 2 }
    * //]
    *
-   * @example <caption>.distinct() with string filter</caption>
+   * @example <caption>.distinct() with function filter</caption>
    * // Return a deduplicated collection based on a function filter
    * let deduped = linqed([
    *   { a: 1, b: 1},
