@@ -15,14 +15,14 @@
  * @returns {collection} array with linqed collection interface added on top
  */
 let linqed = function(array) {
-  
+
   let publicAPI = [];
-  
+
   /**
    * Determine if all elements in a collection match a given filter
    * @method all
    * @memberof linqed#
-   * @param {(number|string|boolean|function)} filter The filter to test against each element of the collection
+   * @param {(null|number|string|boolean|function)} filter The filter to test against each element of the collection
    *
    * @example <caption>.all() with no filter</caption>
    * // Returns false with no filter specified
@@ -52,38 +52,38 @@ let linqed = function(array) {
    * @returns {boolean} true if all elements match the filter, false otherwise
    */
   let __all = function __all(filter) {
-    
+
     let value = true;
-    
+
     if (typeof(filter) === 'undefined'
         || filter === null) {
-      
+
       value = false;
     }
-    
+
     if (typeof(filter) === 'number'
         || typeof(filter) === 'string'
         || typeof(filter) === 'boolean') {
-      
+
       this.forEach((item) => {
         if (item !== filter) {
           value = false;
         }
       });
     }
-    
+
     if (typeof(filter) === 'function') {
-      
+
       this.forEach((item) => {
         if (!filter(item)) {
           value = false;
         }
       });
     }
-    
+
     return value;
   };
-  
+
   /**
    * Determine the arithmetic average of all members of a collection and return it
    * @method average
@@ -108,45 +108,50 @@ let linqed = function(array) {
    * @returns {number} the arithmetic average or -1 if it cannot be calculated or an invalid filter is provided
    */
   let __average = function __average(filter) {
-    
+
     let count = 0;
     let total = 0;
-    
+
     if (typeof(filter) === 'undefined'
         || filter === null) {
       this.forEach((item) => {
-        
+
         if (typeof(item) === 'number') {
           ++count;
           total += item;
         }
       });
-      
+
       return (count === 0) ? 0 : total / count;
     }
-    
+
     if (typeof(filter) === 'function') {
       this.forEach((item) => {
-        
+
         let res = filter(item);
         if(res !== -1) {
           ++count;
           total += res;
         }
       });
-      
+
       return (count === 0) ? 0 : total / count;
     }
-    
+
     return -1;
   };
-  
+
   /**
    * Determine if the filter value is contained in the collection
    * @method contains
    * @memberof linqed#
    * @param {(null|number|string|boolean|function)} filter The filter to test if it exists in your collection
    *
+   * @example <caption>.contains() with null/empty filter</caption>
+   * // Returns false if the array is empty, true otherwise
+   * let exists = linqed([
+     * ]).contains(); // false
+     *
    * @example <caption>.contains() with function filter</caption>
    * // Returns true if your filter returns true for any element in the collection, otherwise false
    * let exists = linqed([
@@ -164,13 +169,17 @@ let linqed = function(array) {
    * @returns {boolean} true if any element matches the filter, false otherwise
    */
   let __contains = function __contains(filter) {
-    
+
     let i = 0;
-    
+
     if (typeof(filter) === 'undefined') {
-      return this;
+          if (this.length === 0) {
+            return false;
+          } else {
+            return true;
+          }
     }
-    
+
     if (typeof(filter) === 'function') {
       for(i = 0; i < this.length; ++i) {
         if (filter(this[i])) {
@@ -186,7 +195,7 @@ let linqed = function(array) {
       }
     }
   };
-  
+
   /**
    * Return a de-duplicated collection based on a filter if provided
    * @method distinct
@@ -203,7 +212,7 @@ let linqed = function(array) {
    * // 'a',
    * // { a: 1, b: 2 }
    * //]
-   * 
+   *
    * @example <caption>.distinct() with string filter</caption>
    * // Return a deduplicated collection based on a string filter
    * let deduped = linqed([{ a: 1, b: 2}, { a: 1, b: 2}, { a: 3, b: 2}, { a: 3, b: 2}]).distinct('a');
@@ -211,13 +220,13 @@ let linqed = function(array) {
    * // { a: 1, b: 2 },
    * // { a: 3, b: 2 }
    * //]
-   * 
+   *
    * @example <caption>.distinct() with string filter</caption>
    * // Return a deduplicated collection based on a function filter
    * let deduped = linqed([
-   *   { a: 1, b: 1}, 
-   *   { a: 1, b: 2}, 
-   *   { a: 3, b: 2}, 
+   *   { a: 1, b: 1},
+   *   { a: 1, b: 2},
+   *   { a: 3, b: 2},
    *   { a: 3, b: 4}]).distinct((item) => {
    *   return (tyepeof(item.b) === 'number') ? item.b : null;
    * });
@@ -230,24 +239,24 @@ let linqed = function(array) {
    * @returns {collection} linqed collection
    */
   let __distinct = function __distinct(filter) {
-    
+
     let values = linqed([]);
-    
+
     if (typeof(filter) === 'undefined'
         || filter === null) {
-      
+
       this.forEach((item) => {
-        
+
         if (!values.contains(item)) {
           values.push(item);
         }
       });
     }
-    
+
     if (typeof(filter) === 'string') {
-      
+
       this.forEach((item) => {
-        
+
         if (item.hasOwnProperty(filter)) {
           if (!values.contains((vi) => {
             return (vi[filter] === item[filter]) ? true : false;
@@ -257,13 +266,13 @@ let linqed = function(array) {
         }
       });
     }
-    
+
     if (typeof(filter) === 'function') {
-      
+
       this.forEach((item) => {
-        
+
         let iVal = filter(item);
-        
+
         if (!values.contains((i) => {
           return (filter(i) === iVal) ? true : false;
         }) && iVal !== null) {
@@ -271,10 +280,10 @@ let linqed = function(array) {
         }
       });
     }
-    
+
     return values;
   }
-  
+
   /**
    * Rturn an empty collection
    * @method empty
@@ -282,18 +291,18 @@ let linqed = function(array) {
    * @returns {collection} linqed collection
    */
   let __empty = function __empty() {
-    
+
     this.length = 0;
-    
+
     return this;
   };
-  
+
   /**
    * Return a collection with all members except those that match a filter
    * @method except
    * @memberof linqed#
    * @param {(null|number|string|boolean|function|array)} filter The value or collection to remove before returning the collection
-   * 
+   *
    * @example <caption>.except() without filter param</caption>
    * // Return the collection with null elements removed
    * let collection = linqed([
@@ -341,23 +350,23 @@ let linqed = function(array) {
    * @returns {collection} linqed collection
    */
   let __except = function __except(filter) {
-    
+
     let values = linqed([]);
-    
+
     if (typeof(filter) === 'undefined'
         || filter === null) {
-      
+
       this.forEach((item) => {
-        
+
         if (typeof(item) !== 'undefined'
             && item !== null) {
           values.push(item);
         }
       });
     }
-    
+
     if (typeof(filter) === 'number') {
-      
+
       this.forEach((item) => {
         if (typeof(item) === 'number'
             && item !== filter) {
@@ -365,9 +374,9 @@ let linqed = function(array) {
         }
       });
     }
-    
+
     if (typeof(filter) === 'string') {
-      
+
       this.forEach((item) => {
         if (typeof(item) === 'string'
             && item !== filter) {
@@ -375,9 +384,9 @@ let linqed = function(array) {
         }
       });
     }
-    
+
     if (typeof(filter) === 'boolean') {
-      
+
       this.forEach((item) => {
         if (typeof(item) === 'boolean'
             && item !== filter) {
@@ -385,9 +394,9 @@ let linqed = function(array) {
         }
       });
     }
-    
+
     if (typeof(filter) === 'function') {
-      
+
       this.forEach((item) => {
 
         if(filter(item)) {
@@ -395,19 +404,19 @@ let linqed = function(array) {
         }
       });
     }
-    
+
     if (Array.isArray(filter)) {
-      
+
       this.forEach((item) => {
         if(!filter.contains(item)) {
           values.push(item);
         }
       });
     }
-    
+
     return values;
   }
-  
+
   /**
    * Return the first element of the collection that matches the provided filter or null if no match is found
    * @method first
@@ -435,18 +444,18 @@ let linqed = function(array) {
    * @returns {any} The element of the collection that is the first match to your provided filter or null if no match is found
    */
   let __first = function __first(filter) {
-    
+
     let i = 0;
-    
-    if (typeof(filter) === 'undefined' 
+
+    if (typeof(filter) === 'undefined'
         || filter === null) {
       for(i = 0; i < this.length; ++i) {
         if (!!this[i]) {
           return this[i];
         }
       }
-    } 
-    
+    }
+
     if (typeof(filter) === 'number'
                || typeof(filter) === 'string'
                || typeof(filter) === 'boolean') {
@@ -457,7 +466,7 @@ let linqed = function(array) {
       }
       return -1;
     }
-    
+
     if (typeof(filter) === 'function') {
       for(i = 0; i < this.length; ++i) {
         if (filter(this[i])) {
@@ -466,11 +475,11 @@ let linqed = function(array) {
       }
       return null;
     }
-    
+
     console.error(`.first() does not support filters of type "${typeof(filter)}"`)
     return null;
   };
-  
+
   /**
    * Return the first element of the collection that matches the provided filter or a default value if no match is found
    * @method firstOrDefault
@@ -479,7 +488,7 @@ let linqed = function(array) {
    * @param {any} default The default value to return if no match is found based on the filter provided
    *
    * @example <caption>.firstOrDefault() with no filter</caption>
-   * // Return the default when no valid filter is provided 
+   * // Return the default when no valid filter is provided
    * let value = linqed([null, null, 1, 3, 5]).firstOrDefault(null, 8); // 8
    *
    * @example <caption>.firstOrDefault() with base type filter (number, string, boolean)</caption>
@@ -499,14 +508,14 @@ let linqed = function(array) {
    * @returns {any} The element of the collection that is the first match to your provided filter or your default if no match is found
    */
   let __firstOrDefault = function __firstOrDefault(filter, def) {
-    
+
     let value = null;
-    
+
     if (typeof(filter) === 'undefined'
         || filter === null) {
       return def;
     }
-    
+
     if (typeof(filter) === 'number'
         || typeof(filter) === 'string'
         || typeof(filter) === 'boolean') {
@@ -518,7 +527,7 @@ let linqed = function(array) {
         return value;
       }
     }
-    
+
     if (typeof(filter) === 'function') {
       value = this.first(filter);
       if (value === null) {
@@ -527,11 +536,11 @@ let linqed = function(array) {
         return value;
       }
     }
-    
+
     console.error(`.first() does not support filters of type "${typeof(filter)}"`)
     return null;
   };
-  
+
   /**
    * Returns the subset of the collection that is also part of your filter collection
    * @method intersect
@@ -549,19 +558,19 @@ let linqed = function(array) {
    * @example <caption>.intersect() with a filter that has no common elements</caption>
    * // Where no common elements are found an empty collection is returned
    * let collection = linqed([1, 2, 3, 4, 5, 6]).intersect(10); // []
-   * 
+   *
    * @returns {collection} The collection of values common to the base collection and the filter provided
    */
   let __intersect = function __intersect(filterCollection) {
-    
+
     let values = this;
-    
+
     if (Array.isArray(filterCollection)) {
-      
+
       filterCollection.forEach((item) => {
-        
+
         if (!values.contains(item)) {
-          
+
           values.push(item);
         }
       });
@@ -569,17 +578,17 @@ let linqed = function(array) {
         || typeof(filterCollection) === 'string'
         || typeof(filterCollection) === 'boolean'
         || typeof(filterCollection) === 'object') {
-      
+
       if (!values.contains(filterCollection)) {
-        
+
         values.push(filterCollection);
       }
     }
-    
+
    // console.log(values);
     return values;
   }
-  
+
   /**
    * Returns a merged collection based on matching the specified filter property. Assumes property named id if no filter is specified.
    * @method join
@@ -627,7 +636,7 @@ let linqed = function(array) {
    * //]
    *
    * @example <caption>.join() with a function filter</caption>
-   * // With a valid outer collection and a function to return the 
+   * // With a valid outer collection and a function to return the
    * // value to match collection objects on
    * let joined = linqed([
    *   { name: 'Jeff', id: 1 },
@@ -650,50 +659,50 @@ let linqed = function(array) {
    * @returns {collection} The merged collection that results from joining the inner (base) collection and the provided outer function.
    */
   let __join = function __join(outer, filter) {
-    
+
     let joinedArray = linqed([]);
-    
+
     if (Array.isArray(outer) && typeof(filter) === 'undefined') {
-      
+
       this.forEach((item) => {
-        
+
         joinedArray.push(Object.assign({}, item, outer.firstOrDefault((oi) => {
           return (oi['id'] === item['id']) ? true : false;
         }, {})));
       });
-      
+
       return joinedArray;
     }
-    
+
     if (Array.isArray(outer) && typeof(filter) === 'string') {
-      
+
       this.forEach((item) => {
-        
+
         joinedArray.push(Object.assign({}, item, outer.firstOrDefault((oi) => {
           return (oi[filter] === item[filter]) ? true : false;
         }, {})));
       });
-      
+
       return joinedArray;
     }
-    
+
     if (Array.isArray(outer) && typeof(filter) === 'function') {
-      
+
       this.forEach((item) => {
-      
+
         let res = filter(item);
-        
+
         joinedArray.push(Object.assign({}, res, outer.firstOrDefault((oi) => {
           return (filter(oi) === res) ? true : false;
         }, {})));
       });
-      
+
       return joinedArray;
     }
-    
+
     return this;
   };
-  
+
   /**
    * Return the largest numerical value of the collection
    * @method max
@@ -718,35 +727,35 @@ let linqed = function(array) {
    * @returns {number} The largest numerical value from a collection, or -1 if none can be identified.
    */
   let __max = function __max(filter) {
-    
+
     let value = -1;
-    
+
     if (typeof(filter) === 'undefined'
         || filter === null) {
-      
+
       this.forEach((item) => {
-        
+
         if (typeof(item) === 'number'
             && item > value) {
           value = item;
         }
       });
     }
-    
+
     if (typeof(filter) === 'function') {
-      
+
       this.forEach((item) => {
         let res = filter(item);
-        
+
         if (res > value) {
           value = res;
         }
       });
     }
-    
+
     return value;
   };
-  
+
   /**
    * Return the smallest numerical value of the collection
    * @method min
@@ -771,35 +780,35 @@ let linqed = function(array) {
    * @returns {number} The smallest numerical value from a collection, or Infinity if none can be identified.
    */
   let __min = function __min(filter) {
-    
+
     let value = Infinity;
-    
+
     if (typeof(filter) === 'undefined'
         || filter === null) {
-      
+
       this.forEach((item) => {
-        
+
         if (typeof(item) === 'number'
             && item < value) {
           value = item;
         }
       });
     }
-    
+
     if (typeof(filter) === 'function') {
-      
+
       this.forEach((item) => {
         let res = filter(item);
-        
+
         if (res < value) {
           value = res;
         }
       });
     }
-    
+
     return value;
   }
-  
+
   /**
    * Return a collection with elements determined by the filter function provided
    * @method select
@@ -826,19 +835,19 @@ let linqed = function(array) {
    * @returns {collection} The collection of selected properties for each element
    */
   let __select = function __select(filter) {
-    
+
     let collection = linqed([]);
-    
+
     if (typeof(filter) === 'function') {
       this.forEach((item) => {
         collection.push(filter(item));
       });
       return collection;
     }
-    
+
     return this;
   };
-  
+
   /**
    * Return the numerical sum of all elements of a collection
    * @method sum
@@ -863,21 +872,21 @@ let linqed = function(array) {
    * @returns {number} The sum of all elements, or -1 if no numerical elements can be found or no non-zero numbers are returned from the filter
    */
   let __sum = function __sum(filter) {
-    
+
     let total = 0;
-    
+
     if (typeof(filter) === 'undefined'
         || filter === null) {
-      
+
       this.forEach((item) => {
         if (typeof(item) === 'number') {
           total += item;
         }
       });
     }
-    
+
     if (typeof(filter) === 'function') {
-      
+
       this.forEach((item) => {
         let res = filter(item);
         if (typeof(res) === 'number') {
@@ -885,10 +894,10 @@ let linqed = function(array) {
         }
       });
     }
-    
+
     return (total === 0) ? -1 : total;
   };
-  
+
   /**
    * Return a subset of the collection
    * @method where
@@ -915,14 +924,14 @@ let linqed = function(array) {
    * @returns {collection} The collection of elements determined by the filter, or the starting collection if the filter is not a function.
    */
   let __where = function __where(filter) {
-    
+
     if (typeof(filter) !== 'function') {
       return this;
     }
-    
+
     return this.filter(filter);
   };
-  
+
   publicAPI.push(
     { name: 'all', method: __all },
     { name: 'average', method: __average },
@@ -940,14 +949,14 @@ let linqed = function(array) {
     { name: 'sum', method: __sum },
     { name: 'where', method: __where }
   );
-  
+
   publicAPI.forEach((endpoint) => {
     Object.defineProperty(array, endpoint.name, {
       enumerable: false,
       value: endpoint.method
     });
   });
-  
+
   return array;
 };
 

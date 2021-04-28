@@ -43,7 +43,7 @@ Determine if all elements in a collection match a given filter
 
 | Param | Type | Description |
 | --- | --- | --- |
-| filter | <code>number</code> \| <code>string</code> \| <code>boolean</code> \| <code>function</code> | The filter to test against each element of the collection |
+| filter | <code>null</code> \| <code>number</code> \| <code>string</code> \| <code>boolean</code> \| <code>function</code> | The filter to test against each element of the collection |
 
 **Example** *(.all() with no filter)*  
 ```js
@@ -114,6 +114,12 @@ Determine if the filter value is contained in the collection
 | --- | --- | --- |
 | filter | <code>null</code> \| <code>number</code> \| <code>string</code> \| <code>boolean</code> \| <code>function</code> | The filter to test if it exists in your collection |
 
+**Example** *(.contains() with null/empty filter)*  
+```js
+// Returns false if the array is empty, true otherwise
+let exists = linqed([
+]).contains(); // false
+```
 **Example** *(.contains() with function filter)*  
 ```js
 // Returns true if your filter returns true for any element in the collection, otherwise false
@@ -167,9 +173,9 @@ let deduped = linqed([{ a: 1, b: 2}, { a: 1, b: 2}, { a: 3, b: 2}, { a: 3, b: 2}
 ```js
 // Return a deduplicated collection based on a function filter
 let deduped = linqed([
-  { a: 1, b: 1}, 
-  { a: 1, b: 2}, 
-  { a: 3, b: 2}, 
+  { a: 1, b: 1},
+  { a: 1, b: 2},
+  { a: 3, b: 2},
   { a: 3, b: 4}]).distinct((item) => {
   return (tyepeof(item.b) === 'number') ? item.b : null;
 });
@@ -294,7 +300,7 @@ Return the first element of the collection that matches the provided filter or a
 
 **Example** *(.firstOrDefault() with no filter)*  
 ```js
-// Return the default when no valid filter is provided 
+// Return the default when no valid filter is provided
 let value = linqed([null, null, 1, 3, 5]).firstOrDefault(null, 8); // 8
 ```
 **Example** *(.firstOrDefault() with base type filter (number, string, boolean))*  
@@ -396,7 +402,7 @@ console.log(joined);
 ```
 **Example** *(.join() with a function filter)*  
 ```js
-// With a valid outer collection and a function to return the 
+// With a valid outer collection and a function to return the
 // value to match collection objects on
 let joined = linqed([
   { name: 'Jeff', id: 1 },
