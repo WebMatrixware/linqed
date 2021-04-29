@@ -331,6 +331,11 @@ Returns the subset of the collection that is also part of your filter collection
 | --- | --- | --- |
 | filterCollection | <code>collection</code> \| <code>array</code> \| <code>number</code> \| <code>string</code> \| <code>boolean</code> \| <code>object</code> | The collection or value to filter with |
 
+**Example** *(.intersect() with no filter)*  
+```js
+// Return an empty collection
+let collection = linqed([1, 2, 3, 4, 5]).intersect(); // []
+```
 **Example** *(.intersect() with a collection as filter)*  
 ```js
 // Return a collection of elements that are common to the base collection and the filter collection

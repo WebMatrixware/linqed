@@ -547,6 +547,10 @@ let linqed = function(array) {
    * @memberof linqed#
    * @param {collection|array|number|string|boolean|object} filterCollection The collection or value to filter with
    *
+   * @example <caption>.intersect() with no filter</caption>
+   * // Return an empty collection
+   * let collection = linqed([1, 2, 3, 4, 5]).intersect(); // []
+   *
    * @example <caption>.intersect() with a collection as filter</caption>
    * // Return a collection of elements that are common to the base collection and the filter collection
    * let collection = linqed([1, 2, 3, 4, 5, 6]).intersect(linqed([3, 4, 5, 7, 8])); // [3, 4, 5]
@@ -564,6 +568,10 @@ let linqed = function(array) {
   let __intersect = function __intersect(filterCollection) {
 
     let values = this;
+
+if (typeof(filterCollection) === 'undefined' || filterCollection === null) {
+    return linqed([]);
+}
 
     if (Array.isArray(filterCollection)) {
 
