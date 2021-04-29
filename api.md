@@ -488,7 +488,7 @@ let smallest = linqed([
 <a name="linqed+select"></a>
 
 ### linqed.select(filter) ⇒ <code>collection</code>
-Return a collection with elements determined by the filter function provided
+Return a collection with elements determined by the filter function provided. NOTE: .select() allows you to control what parts of each object in a collection are returned, but all elements are returned. To limit which elements are returned use .where().
 
 **Kind**: instance method of [<code>linqed</code>](#linqed)  
 **Returns**: <code>collection</code> - The collection of selected properties for each element  
@@ -533,7 +533,7 @@ let totalExperience = linqed([
 <a name="linqed+where"></a>
 
 ### linqed.where(filter) ⇒ <code>collection</code>
-Return a subset of the collection
+Return a subset of the collection. NOTE: .where() allows you to choose which elements to return, to transform those elements use .select().
 
 **Kind**: instance method of [<code>linqed</code>](#linqed)  
 **Returns**: <code>collection</code> - The collection of elements determined by the filter, or the starting collection if the filter is not a function.  

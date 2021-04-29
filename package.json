@@ -1,6 +1,6 @@
 {
   "name": "linqed",
-  "version": "1.0.7",
+  "version": "1.0.8",
   "description": "Simple javascript LINQ implementation for arrays of objects",
   "keywords": [
     "collection",

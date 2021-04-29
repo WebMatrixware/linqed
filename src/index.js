@@ -818,7 +818,7 @@ if (typeof(filterCollection) === 'undefined' || filterCollection === null) {
   }
 
   /**
-   * Return a collection with elements determined by the filter function provided
+   * Return a collection with elements determined by the filter function provided. NOTE: .select() allows you to control what parts of each object in a collection are returned, but all elements are returned. To limit which elements are returned use .where().
    * @method select
    * @memberof linqed#
    * @param {function} filter The function that determins what part of each element is returned in the new collection
@@ -907,7 +907,7 @@ if (typeof(filterCollection) === 'undefined' || filterCollection === null) {
   };
 
   /**
-   * Return a subset of the collection
+   * Return a subset of the collection. NOTE: .where() allows you to choose which elements to return, to transform those elements use .select().
    * @method where
    * @memberof linqed#
    * @param {function} filter The filter function to use to determine which elements of the collection should be returned
