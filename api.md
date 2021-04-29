@@ -169,7 +169,7 @@ let deduped = linqed([{ a: 1, b: 2}, { a: 1, b: 2}, { a: 3, b: 2}, { a: 3, b: 2}
 // { a: 3, b: 2 }
 //]
 ```
-**Example** *(.distinct() with string filter)*  
+**Example** *(.distinct() with function filter)*  
 ```js
 // Return a deduplicated collection based on a function filter
 let deduped = linqed([
