@@ -1,0 +1,9 @@
+language:
+  node_js
+node_js:
+  - 14
+before_install:
+  - npm install -g codecov
+script:
+  - nyc report --reporter=text-lcov > coverage.lcov
+  - codecov --token=:1ea038e3-f423-42b9-a897-a15de7014b34
