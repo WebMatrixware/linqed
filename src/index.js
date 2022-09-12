@@ -2,7 +2,7 @@
 /**
  * linqed is a module for performing linq like operations on Javascript arrays. This is accomplished by
  * layering linqed instance methods on top of existing Javascript arrays that have been transformed into
- * "collections"
+ * "collections". Note that no native array methods are changed or overwritten. Where applicable native array methods can and should be used.
  */
 
 
@@ -82,143 +82,6 @@ let linqed = function(array) {
     }
 
     return value;
-  };
-
-  /**
-   * Return the collection sorted in ascedning order
-   * @method asc
-   * @member linqed#
-   * @param {function} filter The filter function to determine which parameter the collection is sorted on
-   *
-   * @example <caption>.sort() with no filter</caption>
-   * // Return the collection sorted ascending by numrical then alpha on native values
-   * let sorted = linqed(['b', 'c', 'a', 1, 3]).sort(); // [1, 3, 'a', 'b', 'c']
-   *
-   * @example <caption>.sort() with filter function</caption>
-   * // Return the collection sorted ascending by numerical then alpha on the parameter determined by the filter.
-   * let sorted = linqed([
-   *   { name: 'Robert', age: 19 },
-   *   { name: 'Amy', age: 34 },
-   *   { name: 'Peter', age: 54 }
-   * ]).asc((item) => {
-   *   return (item.name);
-   * }); // [{ name: 'Amy', age: 34 }, { name: 'Peter', age: 54 }, { name: 'Robert', age: 19 }]
-   *
-   * @returns {collection} the linqed collection
-   */
-  let __asc = function __asc(filter) {
-
-    let i = 0;
-    let j = 0;
-    let added = false;
-    let values = linqed([]);
-
-    if (typeof(filter) === 'undefined'
-        || filter === null) {
-
-      for(i = 0; i < this.length; ++i) {
-
-        if (typeof(this[i]) !== 'undefined') {
-
-          added = false;
-          if (values.length === 0) {
-
-            values.push(this[i]);
-            added = true;
-            continue;
-          } else {
-
-            for(j = 0; j < values.length; ++j) {
-
-              if (this[i] < values[j]) {
-
-                values.splice(j, 0, this[i]);
-                added = true;
-                break;
-              }
-            }
-
-            if (added === false) {
-
-              values.push(this[i]);
-            }
-          }
-        }
-      }
-    }
-
-    if (typeof(filter) === 'string') {
-
-      for(i = 0; i < this.length; ++i) {
-
-        if (typeof(this[i]) !== 'undefined') {
-
-          added = false;
-          if (values.length === 0) {
-
-            values.push(this[i]);
-            added = true;
-            continue;
-          } else {
-
-            for(j = 0; j < values.length; ++j) {
-
-              if(this[i].hasOwnProperty(filter) && values[j].hasOwnProperty(filter)) {
-
-                if (this[i][filter] < values[j][filter]) {
-
-                  values.splice(j, 0, this[i]);
-                  added = true;
-                  break;
-                }
-              }
-            }
-
-            if (added === false) {
-
-              values.push(this[i]);
-            }
-          }
-        }
-      }
-    }
-
-    if (typeof(filter) === 'function') {
-
-      for(i = 0; i < this.length; ++i) {
-
-        if (typeof(this[i]) !== 'undefined') {
-
-          added = false;
-          if (values.length === 0) {
-
-            values.push(this[i]);
-            added = true;
-            continue;
-          } else {
-
-            for(j = 0; j < values.length; ++j) {
-
-              if (filter(this[i]) < filter(values[j])) {
-
-                values.splice(j, 0, this[i]);
-                added = true;
-                break;
-              }
-            }
-
-            if (added === false) {
-
-              values.push(this[i]);
-            }
-          }
-        }
-      }
-    }
-
-    console.log(values);
-
-    return values;
   };
 
   /**
@@ -420,143 +283,6 @@ let linqed = function(array) {
 
     return values;
   }
-
-  /**
-   * Return the collection sorted in descending order
-   * @method dsc
-   * @member linqed#
-   * @param {function} filter The filter function to determine which parameter the collection is sorted on
-   *
-   * @example <caption>.sort() with no filter</caption>
-   * // Return the collection sorted descending by numrical then alpha on native values
-   * let sorted = linqed(['b', 'c', 'a', 1, 3]).sort(); // [1, 3, 'a', 'b', 'c']
-   *
-   * @example <caption>.sort() with filter function</caption>
-   * // Return the collection sorted descending by numerical then alpha on the parameter determined by the filter.
-   * let sorted = linqed([
-   *   { name: 'Robert', age: 19 },
-   *   { name: 'Amy', age: 34 },
-   *   { name: 'Peter', age: 54 }
-   * ]).asc((item) => {
-   *   return (item.name);
-   * }); // [{ name: 'Amy', age: 34 }, { name: 'Peter', age: 54 }, { name: 'Robert', age: 19 }]
-   *
-   * @returns {collection} the linqed collection
-   */
-  let __dsc = function __dsc(filter) {
-
-    let i = 0;
-    let j = 0;
-    let added = false;
-    let values = linqed([]);
-
-    if (typeof(filter) === 'undefined'
-        || filter === null) {
-
-      for(i = 0; i < this.length; ++i) {
-
-        if (typeof(this[i]) !== 'undefined') {
-
-          added = false;
-          if (values.length === 0) {
-
-            values.push(this[i]);
-            added = true;
-            continue;
-          } else {
-
-            for(j = 0; j < values.length; ++j) {
-
-              if (this[i] > values[j]) {
-
-                values.splice(j, 0, this[i]);
-                added = true;
-                break;
-              }
-            }
-
-            if (added === false) {
-
-              values.push(this[i]);
-            }
-          }
-        }
-      }
-    }
-
-    if (typeof(filter) === 'string') {
-
-      for(i = 0; i < this.length; ++i) {
-
-        if (typeof(this[i]) !== 'undefined') {
-
-          added = false;
-          if (values.length === 0) {
-
-            values.push(this[i]);
-            added = true;
-            continue;
-          } else {
-
-            for(j = 0; j < values.length; ++j) {
-
-              if(this[i].hasOwnProperty(filter) && values[j].hasOwnProperty(filter)) {
-
-                if (this[i][filter] > values[j][filter]) {
-
-                  values.splice(j, 0, this[i]);
-                  added = true;
-                  break;
-                }
-              }
-            }
-
-            if (added === false) {
-
-              values.push(this[i]);
-            }
-          }
-        }
-      }
-    }
-
-    if (typeof(filter) === 'function') {
-
-      for(i = 0; i < this.length; ++i) {
-
-        if (typeof(this[i]) !== 'undefined') {
-
-          added = false;
-          if (values.length === 0) {
-
-            values.push(this[i]);
-            added = true;
-            continue;
-          } else {
-
-            for(j = 0; j < values.length; ++j) {
-
-              if (filter(this[i]) > filter(values[j])) {
-
-                values.splice(j, 0, this[i]);
-                added = true;
-                break;
-              }
-            }
-
-            if (added === false) {
-
-              values.push(this[i]);
-            }
-          }
-        }
-      }
-    }
-
-    console.log(values);
-
-    return values;
-  };
 
   /**
    * Rturn an empty collection
@@ -1216,11 +942,9 @@ if (typeof(filterCollection) === 'undefined' || filterCollection === null) {
 
   publicAPI.push(
     { name: 'all', method: __all },
-    { name: 'asc', method: __asc },
     { name: 'average', method: __average },
     { name: 'contains', method: __contains },
     { name: 'distinct', method: __distinct },
-    { name: 'dsc', method: __dsc },
     { name: 'empty', method: __empty },
     { name: 'except', method: __except },
     { name: 'first', method: __first },
